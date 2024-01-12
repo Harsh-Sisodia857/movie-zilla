@@ -12,7 +12,6 @@ const initialState = {
     genres: [],
     loader: true,
     backgenre: false,
-    user: null,
 };
 
 const API_KEY = import.meta.env.VITE_API_KEY;
