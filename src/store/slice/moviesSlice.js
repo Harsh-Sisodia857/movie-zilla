@@ -12,20 +12,21 @@ const initialState = {
     genres: [],
     loader: true,
     backgenre: false,
+    searchQuery : ""
 };
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-export const fetchMovies = createAsyncThunk('movies/fetchMovies', async ({ activegenre, page, query }) => {
+export const fetchMovies = createAsyncThunk('movies/fetchMovies', async ({ activegenre, page }) => {
     let apiUrl = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_origin_country=IN&page=${page}`;
 
     if (activegenre) {
         apiUrl += `&with_genres=${activegenre}`;
     }
 
-    if (query) {
-        apiUrl = `${BASE_URL}/search/movie?api_key=${API_KEY}&with_origin_country=IN&language=en-US&query=${query}&page=1&include_adult=false`;
+    if (searchQuery) {
+        apiUrl = `${BASE_URL}/search/movie?api_key=${API_KEY}&with_origin_country=IN&language=en-US&query=${searchQuery}&page=1&include_adult=false`;
     }
 
     const response = await fetch(apiUrl);
@@ -56,6 +57,9 @@ const moviesSlice = createSlice({
         setLoader: (state, action) => {
             state.loader = action.payload;
         },
+        setSearchQuery: (state, action) => {
+            state.searchQuery = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -74,5 +78,5 @@ const moviesSlice = createSlice({
 
 });
 
-export const { setHeader, setPage, setActiveGenre, setGenres, setBackGenre, setLoader } = moviesSlice.actions;
+export const { setHeader, setPage, setActiveGenre, setGenres, setBackGenre, setLoader, setSearchQuery } = moviesSlice.actions;
 export default moviesSlice.reducer;

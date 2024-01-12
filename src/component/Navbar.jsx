@@ -21,7 +21,7 @@ function Navbar() {
       id: 1,
       headername: "Genres",
       Name: "Genres",
-      link: "/genre",
+      link: "/",
     },
     {
       id: 2,
