@@ -1,10 +1,12 @@
 import React from 'react'
 import Searchbar from '../component/Searchbar'
+import Movies from './Movies';
 
 function Home() {
   return (
-    <div>
+    <div className=" ml-[15rem]">
       <Searchbar />
+     <Movies />
     </div>
   );
 }

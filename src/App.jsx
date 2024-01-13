@@ -4,6 +4,7 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './component/Login';
 import Home from './pages/Home';
+import Favoritepage from './pages/Favourite';
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/favorite" element={<Favoritepage />} />
       </Routes>
     </Router>
   );

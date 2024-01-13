@@ -5,13 +5,13 @@ import { motion } from "framer-motion";
 import { HiMenuAlt1, HiX } from "react-icons/hi";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/slice/userSlice";
+import User from "../assets/User.jpg"
 
 function Navbar() {
   const { header } = useSelector((state) => state.movies);
   const dispatch = useDispatch();
   const [activemobile, setActivemobile] = useState(false);
   const { user } = useSelector((state) => state.user);
-  console.log(user)
   const handleLogout = () => {
       dispatch(logout())
   }
