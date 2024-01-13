@@ -7,14 +7,12 @@ function Favoritepage() {
   const { loader, favouriteMovies } = useSelector((state) => state.movies);
 
   
-    console.log(favouriteMovies);
-    if (favouriteMovies.length == 0)
-      return (
-        <div className="flex h-[100vh] ml-[15rem] justify-center items-center">
-          <p className="text-xl text-white">No Bookmark Yet!</p>
-        </div>
-      );
-  console.log(favouriteMovies)
+  if (favouriteMovies.length == 0)
+    return (
+      <div className="flex h-[100vh] ml-[15rem] justify-center items-center">
+        <p className="text-xl text-white">No Bookmark Yet!</p>
+      </div>
+    );
   return (
     <>
       <div className="ml-[15rem] bg-[#10141e] md:p-10 mb-20 md:mb-0">
