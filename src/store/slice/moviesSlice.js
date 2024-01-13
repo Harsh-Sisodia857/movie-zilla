@@ -66,6 +66,14 @@ export const fetchUpcomingMovies = createAsyncThunk('upcoming/fetchUpcomingMovie
     return data;
 });
 
+export const fetchSearchMovies = createAsyncThunk('search/fetchSearchMovies', async (query) => {
+    const response = await fetch(
+        `${BASE_URL}/search/movie?api_key=${API_KEY}&with_origin_country=IN&language=en-US&query=${query}&page=1&include_adult=false`
+    );
+    const data = await response.json();
+    return data;
+});
+
 const moviesSlice = createSlice({
     name: 'movies',
     initialState,
@@ -123,7 +131,11 @@ const moviesSlice = createSlice({
         },
         setSearchQuery: (state, action) => {
             state.searchQuery = action.payload;
-        }
+        },
+        clearSearchedMovies: (state) => {
+            state.searchedMovies = [];
+            state.searchQuery = ""
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -174,9 +186,21 @@ const moviesSlice = createSlice({
             .addCase(fetchUpcomingMovies.rejected, (state) => {
                 state.loader = false;
             });
+        builder
+            .addCase(fetchSearchMovies.fulfilled, (state, action) => {
+                state.searchedMovies = action.payload.results;
+                state.totalPage = action.payload.total_pages;
+                state.loader = false;
+            })
+            .addCase(fetchSearchMovies.pending, (state) => {
+                state.loader = true;
+            })
+            .addCase(fetchSearchMovies.rejected, (state) => {
+                state.loader = false;
+            });
     },
 
 });
 
-export const { setHeader, setPage, setActiveGenre, setTrendingPage, setTrendingLoader, setGenres, setBackGenre, addFavoriteMovie, removeFavoriteMovie, setLoader, setSearchQuery } = moviesSlice.actions;
+export const { setHeader, setPage, setActiveGenre, setTrendingPage, setTrendingLoader, setGenres, setBackGenre, addFavoriteMovie, removeFavoriteMovie, setLoader, setSearchQuery, clearSearchedMovies } = moviesSlice.actions;
 export default moviesSlice.reducer;

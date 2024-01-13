@@ -1,15 +1,10 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setSearchQuery } from "../store/slice/moviesSlice";
 function Searchbar() {
-  const [value, setValue] = useState("");
+  const { searchQuery } = useSelector((state) => state.movies);
 
   const dispatch = useDispatch();
-    const handleSearch = () => {
-      console.log(value)
-     dispatch(setSearchQuery(value));
-  };
-
 
   return (
     <>
@@ -21,9 +16,8 @@ function Searchbar() {
             id="searchpanel"
             placeholder="Search Movie"
             className="p-3 w-full mx-10 md:w-[40rem]  rounded-xl outline-none"
-            onKeyUp={(e) => handleSearch()}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
           />
         </div>
       </div>

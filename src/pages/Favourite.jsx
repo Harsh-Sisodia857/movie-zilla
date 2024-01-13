@@ -25,8 +25,8 @@ function Favoritepage() {
               <span className="loader m-10"></span>
             ) : (
               favouriteMovies
-                .map((movie, index) => (
-                  <Moviecard key={index} movie={movie} />
+                .map((movie) => (
+                  <Moviecard key={movie.id} movie={movie} />
                 ))
             )}
           </AnimatePresence>

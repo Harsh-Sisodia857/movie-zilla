@@ -54,8 +54,8 @@ function Movies() {
                   scrollThreshol={0.9}
                   style={{ overflow: "hidden" }}
                 >
-                  {movies.map((movie) => (
-                    <Moviecard key={movie.id} movie={movie} />
+                  {movies.map((movie,index) => (
+                    <Moviecard key={index} movie={movie} />
                   ))}
                 </InfiniteScroll>
               </>
