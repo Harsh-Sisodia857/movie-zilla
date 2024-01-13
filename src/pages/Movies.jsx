@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
 import { setPage, fetchMovies } from "../store/slice/moviesSlice";
+import Genre from "./Genre";
 
 function Movies() {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ function Movies() {
   
   return (
     <div className="w-full bg-[#10141e] md:p-10 mb-20 md:mb-0">
+      <Genre/>
       <div>
         <motion.div
           layout
