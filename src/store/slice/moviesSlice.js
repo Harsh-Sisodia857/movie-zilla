@@ -31,12 +31,38 @@ export const fetchMovies = createAsyncThunk('movies/fetchMovies', async ({ activ
     if (activegenre) {
         apiUrl += `&with_genres=${activegenre}`;
     }
-
+    console.log(activegenre)
+    console.log(apiUrl);
     if (searchQuery) {
         apiUrl = `${BASE_URL}/search/movie?api_key=${API_KEY}&with_origin_country=IN&language=en-US&query=${searchQuery}&page=1&include_adult=false`;
     }
     const response = await fetch(apiUrl);
     const data = await response.json();
+    return data;
+});
+
+export const fetchGenres = createAsyncThunk('movies/fetchGenres', async () => {
+    const response = await fetch(
+        `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&with_origin_country=IN&language=en-US`
+    );
+    const data = await response.json();
+    return data.genres;
+});
+
+export const fetchTrendingMovies = createAsyncThunk('trending/fetchTrendingMovies', async (page) => {
+    const response = await fetch(
+        `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&with_origin_country=IN&page=${page}`
+    );
+    const data = await response.json();
+    return data;
+});
+
+export const fetchUpcomingMovies = createAsyncThunk('upcoming/fetchUpcomingMovies', async (page) => {
+    const response = await fetch(
+        `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&with_origin_country=IN&page=${page}`
+    );
+    const data = await response.json();
+    console.log(data);
     return data;
 });
 
@@ -49,23 +75,40 @@ const moviesSlice = createSlice({
             console.log("Added To Favourite...",movieId)
             if (!state.favouriteMovies.includes(movieId)) {
                 const movie = state.movies.find((m) => m.id === movieId);
-
                 if (movie) {
                     const updatedFavorites = state.favouriteMovies.concat(movie);
+                    console.log(updatedFavorites)
                     state.favouriteMovies = updatedFavorites;
                     localStorage.setItem('favouriteMovies', JSON.stringify(updatedFavorites));
+                } else {
+                    const trendingMovie = state.trending.find((m) => m.id === movieId);
+                    console.log("MOVIE  :", trendingMovie)
+                    if (trendingMovie) {
+                        const updatedFavorites = state.favouriteMovies.concat(trendingMovie);
+                        console.log(updatedFavorites)
+                        state.favouriteMovies = updatedFavorites;
+                        localStorage.setItem('favouriteMovies', JSON.stringify(updatedFavorites));
+                    } else {
+                        const upcomingMovie = state.upcoming.find((m) => m.id === movieId)
+                        if (upcomingMovie) {
+                            const updatedFavorites = state.favouriteMovies.concat(upcomingMovie);
+                            console.log(updatedFavorites)
+                            state.favouriteMovies = updatedFavorites;
+                            localStorage.setItem('favouriteMovies', JSON.stringify(updatedFavorites));
+                        }
+                    }
                 }
             }
-
         },
         removeFavoriteMovie: (state, action) => {
             console.log("Remove From Favourite...");
             const movieId = action.payload;
             state.favouriteMovies = state.favouriteMovies.filter((movie) => movie.id !== movieId);
-
             localStorage.setItem('favouriteMovies', JSON.stringify(state.favouriteMovies));
         },
-
+        setTrendingPage: (state, action) => {
+            state.page = action.payload;
+        },
         setPage: (state, action) => {
             state.page = action.payload;
         },
@@ -95,9 +138,45 @@ const moviesSlice = createSlice({
             .addCase(fetchMovies.rejected, (state) => {
                 state.loader = false;
             });
+        builder
+            .addCase(fetchGenres.fulfilled, (state, action) => {
+                state.genres = action.payload;
+            })
+            .addCase(fetchGenres.pending, (state) => {
+                state.loader = true;
+            })
+            .addCase(fetchGenres.rejected, (state) => {
+                state.loader = false;
+            });
+        builder
+            .addCase(fetchTrendingMovies.fulfilled, (state, action) => {
+                console.log(action.payload.results)
+                state.trending = state.trending.concat(action.payload.results);
+                state.totalPage = action.payload.total_pages;
+                state.loader = false;
+            })
+            .addCase(fetchTrendingMovies.pending, (state) => {
+                state.loader = true;
+            })
+            .addCase(fetchTrendingMovies.rejected, (state) => {
+                state.loader = false;
+            });
+        builder
+            .addCase(fetchUpcomingMovies.fulfilled, (state, action) => {
+                console.log(action.payload.results)
+                state.upcoming = state.upcoming.concat(action.payload.results);
+                state.totalPage = action.payload.total_pages;
+                state.loader = false;
+            })
+            .addCase(fetchUpcomingMovies.pending, (state) => {
+                state.loader = true;
+            })
+            .addCase(fetchUpcomingMovies.rejected, (state) => {
+                state.loader = false;
+            });
     },
 
 });
 
-export const { setHeader, setPage, setActiveGenre, setGenres, setBackGenre, addFavoriteMovie, removeFavoriteMovie, setLoader, setSearchQuery } = moviesSlice.actions;
+export const { setHeader, setPage, setActiveGenre, setTrendingPage, setTrendingLoader, setGenres, setBackGenre, addFavoriteMovie, removeFavoriteMovie, setLoader, setSearchQuery } = moviesSlice.actions;
 export default moviesSlice.reducer;
