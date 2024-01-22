@@ -4,11 +4,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { fetchMovies } from "../store/slice/moviesSlice";
 import { HiChevronLeft } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSearchMovies, clearSearchedMovies } from "../store/slice/moviesSlice";
+import {
+  fetchSearchMovies,
+  clearSearchedMovies,
+} from "../store/slice/moviesSlice";
 
 function Search({ query }) {
   const dispatch = useDispatch();
-  const {activegenre, searchQuery,page, searchedMovies, loader } = useSelector((state) => state.movies);
+  const { activegenre, searchQuery, page, searchedMovies, loader } =
+    useSelector((state) => state.movies);
 
   useEffect(() => {
     dispatch(fetchSearchMovies(query));
@@ -37,9 +41,15 @@ function Search({ query }) {
               <span className="loader m-10"></span>
             ) : (
               <>
-                {searchedMovies.map((movie) => (
-                  <Moviecard key={movie.id} movie={movie} />
-                ))}
+                {searchedMovies.length > 0 ? (
+                  searchedMovies.map((movie) => (
+                    <Moviecard key={movie.id} movie={movie} />
+                  ))
+                ) : (
+                  <div>
+                    <h1 className="text-white text-4xl">No Movie Found !!</h1>
+                  </div>
+                )}
               </>
             )}
           </AnimatePresence>
